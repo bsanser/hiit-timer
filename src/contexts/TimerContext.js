@@ -1,4 +1,3 @@
-import React, { useReducer } from "react";
 import { ADD_TIMER, DELETE_TIMER } from "../constants/actionTypes";
 import createDataContext from "../contexts/createDataContext";
 

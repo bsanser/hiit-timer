@@ -24,7 +24,7 @@ const Name = styled.Text`
   font-size: 24px;
 `;
 
-const IndexScreen = () => {
+const IndexScreen = ({ navigation, ...props }) => {
   const { state, addTimer, deleteTimer } = useContext(Context);
   return (
     <View>
@@ -34,14 +34,18 @@ const IndexScreen = () => {
         keyExtractor={(timer) => timer.name}
         renderItem={({ item }) => {
           return (
-            <TimerListItem>
-              <Name>
-                {item.name} - {item.id}
-              </Name>
-              <TouchableOpacity onPress={() => deleteTimer(item.id)}>
-                <FontAwesome name="trash-o" size={32} color="black" />
-              </TouchableOpacity>
-            </TimerListItem>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Show", { id: item.id })}
+            >  
+              <TimerListItem>
+                <Name>
+                  {item.name} - {item.id}
+                </Name>
+                <TouchableOpacity onPress={() => deleteTimer(item.id)}>
+                  <FontAwesome name="trash-o" size={32} color="black" />
+                </TouchableOpacity>
+              </TimerListItem>
+            </TouchableOpacity>
           );
         }}
       />
