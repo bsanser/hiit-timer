@@ -7,8 +7,10 @@ const timerReducer = (state, action) => {
       return [
         ...state,
         {
-          id: Math.floor(Math.random() * 9999), //refactor
-          name: `Blog Post #${state.length + 1}`,
+          id: Math.floor(Math.random() * 9999), // TODO: refactor
+          nameOfTimer: action.payload.nameOfTimer,
+          numberOfSets: action.payload.numberOfSets,
+          numberOfExercises: action.payload.numberOfExercises,
         },
       ];
     }
@@ -21,8 +23,12 @@ const timerReducer = (state, action) => {
 };
 
 const addTimer = (dispatch) => {
-  return () => {
-    dispatch({ type: ADD_TIMER });
+  return (nameOfTimer, numberOfSets, numberOfExercises, callback) => {
+    dispatch({
+      type: ADD_TIMER,
+      payload: { nameOfTimer, numberOfSets, numberOfExercises },
+    });
+    callback();
   };
 };
 

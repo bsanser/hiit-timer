@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Feather } from "@expo/vector-icons";
 import {
   View,
   Text,
@@ -16,7 +17,7 @@ const TimerListItem = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: 20px;
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
   border-color: gray;
 `;
 
@@ -25,10 +26,9 @@ const Name = styled.Text`
 `;
 
 const IndexScreen = ({ navigation, ...props }) => {
-  const { state, addTimer, deleteTimer } = useContext(Context);
+  const { state, deleteTimer } = useContext(Context);
   return (
     <View>
-      <Button title="Add timer" onPress={addTimer} />
       <FlatList
         data={state}
         keyExtractor={(timer) => timer.name}
@@ -36,10 +36,10 @@ const IndexScreen = ({ navigation, ...props }) => {
           return (
             <TouchableOpacity
               onPress={() => navigation.navigate("Show", { id: item.id })}
-            >  
+            >
               <TimerListItem>
                 <Name>
-                  {item.name} - {item.id}
+                  {item.nameOfTimer} - {item.id}
                 </Name>
                 <TouchableOpacity onPress={() => deleteTimer(item.id)}>
                   <FontAwesome name="trash-o" size={32} color="black" />
@@ -51,6 +51,17 @@ const IndexScreen = ({ navigation, ...props }) => {
       />
     </View>
   );
+};
+
+IndexScreen.navigationOptions = ({ navigation }) => {
+  return {
+    headerRight: () => (
+      <TouchableOpacity onPress={() => navigation.navigate("Create")}>
+        <Feather name="plus-circle" size={36} color="white" />
+      </TouchableOpacity>
+    ),
+    headerTintColor: "#fff",
+  };
 };
 
 export default IndexScreen;
