@@ -35,13 +35,13 @@ const IndexScreen = ({ navigation, ...props }) => {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Show", { id: item.id })}
+              onPress={() =>
+                navigation.navigate("Show", { nameOfTimer: item.nameOfTimer })
+              }
             >
               <TimerListItem>
-                <Name>
-                  {item.nameOfTimer} - {item.id}
-                </Name>
-                <TouchableOpacity onPress={() => deleteTimer(item.id)}>
+                <Name>{item.nameOfTimer}</Name>
+                <TouchableOpacity onPress={() => deleteTimer(item.nameOfTimer)}>
                   <FontAwesome name="trash-o" size={32} color="black" />
                 </TouchableOpacity>
               </TimerListItem>

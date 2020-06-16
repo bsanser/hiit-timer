@@ -171,21 +171,6 @@ const CreateScreen = ({ navigation }) => {
             totalDuration,
             callback: () => {
               navigation.navigate("Index");
-              console.log({
-                nameOfTimer,
-                numberOfSets,
-                numberOfExercises,
-                nameOfExercises,
-                exerciseDuration,
-                restBetweenExercises,
-                restBetweenSets,
-                hasWarmupPeriod,
-                warmupPeriod,
-                hasCooldownPeriod,
-                cooldownPeriod,
-                timerStructure,
-                totalDuration,
-              });
             },
           });
         }}

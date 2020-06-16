@@ -3,14 +3,16 @@ import { View, Text } from "react-native";
 import { Context } from "../contexts/TimerContext";
 
 const ShowScreen = ({ navigation }) => {
-  const id = navigation.getParam("id");
+  const nameOfTimer = navigation.getParam("nameOfTimer");
   const { state } = useContext(Context);
-  const selectedTimer = state.find((timer) => timer.id === id);
-  //console.log({ selectedTimer });
+  const selectedTimer = state.find(
+    (timer) => timer.nameOfTimer === nameOfTimer
+  );
+  console.log({ selectedTimer });
   return (
     <View>
-      <Text>{selectedTimer.nameOfTimer}</Text>
-      <Text>{selectedTimer.id}</Text>
+      <Text>Name: {selectedTimer.nameOfTimer}</Text>
+      <Text>Total duration: {selectedTimer.totalDuration}</Text>
     </View>
   );
 };
