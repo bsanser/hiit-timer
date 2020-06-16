@@ -31,7 +31,7 @@ const IndexScreen = ({ navigation, ...props }) => {
     <View>
       <FlatList
         data={state}
-        keyExtractor={(timer) => timer.name}
+        keyExtractor={(timer) => timer.nameOfTimer}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity

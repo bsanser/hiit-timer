@@ -6,10 +6,10 @@ const ShowScreen = ({ navigation }) => {
   const id = navigation.getParam("id");
   const { state } = useContext(Context);
   const selectedTimer = state.find((timer) => timer.id === id);
-
+  //console.log({ selectedTimer });
   return (
     <View>
-      <Text>{selectedTimer.name}</Text>
+      <Text>{selectedTimer.nameOfTimer}</Text>
       <Text>{selectedTimer.id}</Text>
     </View>
   );

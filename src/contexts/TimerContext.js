@@ -11,6 +11,11 @@ const timerReducer = (state, action) => {
           nameOfTimer: action.payload.nameOfTimer,
           numberOfSets: action.payload.numberOfSets,
           numberOfExercises: action.payload.numberOfExercises,
+          nameOfExercises: action.payload.nameOfExercises,
+          hasWarmupPeriod: action.payload.hasWarmupPeriod,
+          warmupPeriod: action.payload.warmupPeriod,
+          hasCooldownPeriod: action.payload.hasCooldownPeriod,
+          cooldownPeriod: action.payload.cooldownPeriod,
         },
       ];
     }
@@ -23,10 +28,39 @@ const timerReducer = (state, action) => {
 };
 
 const addTimer = (dispatch) => {
-  return (nameOfTimer, numberOfSets, numberOfExercises, callback) => {
+  return ({
+    nameOfTimer,
+    numberOfSets,
+    numberOfExercises,
+    hasWarmupPeriod,
+    warmupPeriod,
+    hasCooldownPeriod,
+    cooldownPeriod,
+    nameOfExercises,
+    exerciseDuration,
+    restBetweenExercises,
+    restBetweenSets,
+    timerStructure,
+    totalDuration,
+    callback,
+  }) => {
     dispatch({
       type: ADD_TIMER,
-      payload: { nameOfTimer, numberOfSets, numberOfExercises },
+      payload: {
+        nameOfTimer,
+        numberOfSets,
+        numberOfExercises,
+        hasWarmupPeriod,
+        warmupPeriod,
+        hasCooldownPeriod,
+        cooldownPeriod,
+        nameOfExercises,
+        exerciseDuration,
+        restBetweenExercises,
+        restBetweenSets,
+        timerStructure,
+        totalDuration,
+      },
     });
     callback();
   };
