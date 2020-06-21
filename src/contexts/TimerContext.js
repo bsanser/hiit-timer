@@ -1,28 +1,16 @@
-import { ADD_TIMER, DELETE_TIMER } from "../constants/actionTypes";
+import { ADD_TIMER, DELETE_TIMER, GET_TIMERS } from "../constants/actionTypes";
 import createDataContext from "../contexts/createDataContext";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const timerReducer = (state, action) => {
   switch (action.type) {
-    case ADD_TIMER: {
-      return [
-        ...state,
-        {
-          nameOfTimer: action.payload.nameOfTimer,
-          numberOfSets: action.payload.numberOfSets,
-          numberOfExercises: action.payload.numberOfExercises,
-          nameOfExercises: action.payload.nameOfExercises,
-          exerciseDuration: action.payload.exerciseDuration,
-          restBetweenExercises: action.payload.restBetweenExercises,
-          restBetweenSets: action.payload.restBetweenSets,
-          hasWarmupPeriod: action.payload.hasWarmupPeriod,
-          warmupPeriod: action.payload.warmupPeriod,
-          hasCooldownPeriod: action.payload.hasCooldownPeriod,
-          cooldownPeriod: action.payload.cooldownPeriod,
-          timerStructure: action.payload.timerStructure,
-          totalDuration: action.payload.totalDuration,
-        },
-      ];
+    case GET_TIMERS: {
+      return action.payload;
     }
+    case ADD_TIMER: {
+      return [...state, action.payload];
+    }
+
     case DELETE_TIMER: {
       return state.filter((timer) => timer.nameOfTimer !== action.payload);
     }
@@ -31,8 +19,20 @@ const timerReducer = (state, action) => {
   }
 };
 
+const getTimers = (dispatch) => {
+  return async () => {
+    let timers = [];
+    const timerKeysSaved = await AsyncStorage.getAllKeys();
+    for (let key of timerKeysSaved) {
+      const timer = await AsyncStorage.getItem(key);
+      timers.push(JSON.parse(timer));
+    }
+    dispatch({ type: GET_TIMERS, payload: timers });
+  };
+};
+
 const addTimer = (dispatch) => {
-  return ({
+  return async ({
     nameOfTimer,
     numberOfSets,
     numberOfExercises,
@@ -48,30 +48,36 @@ const addTimer = (dispatch) => {
     totalDuration,
     callback,
   }) => {
-    dispatch({
-      type: ADD_TIMER,
-      payload: {
-        nameOfTimer,
-        numberOfSets,
-        numberOfExercises,
-        hasWarmupPeriod,
-        warmupPeriod,
-        hasCooldownPeriod,
-        cooldownPeriod,
-        nameOfExercises,
-        exerciseDuration,
-        restBetweenExercises,
-        restBetweenSets,
-        timerStructure,
-        totalDuration,
-      },
-    });
-    callback();
+    const newTimer = {
+      nameOfTimer,
+      numberOfSets,
+      numberOfExercises,
+      nameOfExercises,
+      exerciseDuration,
+      restBetweenExercises,
+      restBetweenSets,
+      hasWarmupPeriod,
+      warmupPeriod,
+      hasCooldownPeriod,
+      cooldownPeriod,
+      timerStructure,
+      totalDuration,
+    };
+    await AsyncStorage.setItem(
+      `timer-${nameOfTimer}`,
+      JSON.stringify(newTimer)
+    );
+    dispatch({ type: ADD_TIMER, payload: newTimer });
+
+    if (callback) {
+      callback();
+    }
   };
 };
 
 const deleteTimer = (dispatch) => {
-  return (nameOfTimer) => {
+  return async (nameOfTimer) => {
+    await AsyncStorage.removeItem(`timer-${nameOfTimer}`);
     dispatch({ type: DELETE_TIMER, payload: nameOfTimer });
   };
 };
@@ -81,6 +87,7 @@ export const { Context, Provider } = createDataContext(
   {
     addTimer,
     deleteTimer,
+    getTimers,
   },
   []
 );

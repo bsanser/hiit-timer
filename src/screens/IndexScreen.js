@@ -1,17 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Button,
-  TouchableOpacity,
-} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { Context } from "../contexts/TimerContext";
+import { getMinutesAndSeconds } from "../utils/timerUtils";
 
 const TimerListItem = styled.View`
   flex-direction: row;
@@ -25,8 +20,31 @@ const Name = styled.Text`
   font-size: 24px;
 `;
 
+const DurationWrapper = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 const IndexScreen = ({ navigation, ...props }) => {
-  const { state, deleteTimer } = useContext(Context);
+  const { state, getTimers, deleteTimer } = useContext(Context);
+  const [savedTimers, setSavedTimers] = useState([]);
+
+  async function fetchTimers() {
+    const timers = await getTimers();
+    setSavedTimers(timers);
+    const listener = navigation.addListener("didFocus", () => {
+      setSavedTimers(timers);
+    });
+    return () => {
+      listener.remove();
+    };
+  }
+
+  useEffect(() => {
+    getTimers();
+  }, []);
+
   return (
     <View>
       <FlatList
@@ -41,6 +59,13 @@ const IndexScreen = ({ navigation, ...props }) => {
             >
               <TimerListItem>
                 <Name>{item.nameOfTimer}</Name>
+                <DurationWrapper>
+                  <MaterialIcons name="timer" size={24} color="black" />
+                  <Text>
+                    {getMinutesAndSeconds(item.totalDuration).minutes}min{" "}
+                    {getMinutesAndSeconds(item.totalDuration).seconds}secs{" "}
+                  </Text>
+                </DurationWrapper>
                 <TouchableOpacity onPress={() => deleteTimer(item.nameOfTimer)}>
                   <FontAwesome name="trash-o" size={32} color="black" />
                 </TouchableOpacity>

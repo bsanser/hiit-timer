@@ -27,8 +27,6 @@ const ShowScreen = ({ navigation }) => {
   } = selectedTimer;
 
   const timer = useTimer(selectedTimer);
-  console.log({ selectedTimer });
-  console.log({ timer });
   return (
     <View>
       <Text>Name of the timer: {nameOfTimer}</Text>

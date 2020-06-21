@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import AsyncStorage from "@react-native-community/async-storage";
+
 import { View, Text, TextInput, Button, Switch, FlatList } from "react-native";
 import styled from "styled-components";
 import { Context } from "../contexts/TimerContext";
@@ -169,7 +171,7 @@ const CreateScreen = ({ navigation }) => {
             cooldownPeriod,
             timerStructure,
             totalDuration,
-            callback: () => {
+            callback: async () => {
               navigation.navigate("Index");
             },
           });
