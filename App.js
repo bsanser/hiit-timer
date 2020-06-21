@@ -20,6 +20,7 @@ const navigator = createStackNavigator(
       headerStyle: {
         backgroundColor: COLORS.background,
       },
+      headerTintColor: "#fff",
     },
   }
 );

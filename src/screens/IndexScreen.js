@@ -28,52 +28,49 @@ const DurationWrapper = styled.View`
 
 const IndexScreen = ({ navigation, ...props }) => {
   const { state, getTimers, deleteTimer } = useContext(Context);
-  const [savedTimers, setSavedTimers] = useState([]);
-
-  async function fetchTimers() {
-    const timers = await getTimers();
-    setSavedTimers(timers);
-    const listener = navigation.addListener("didFocus", () => {
-      setSavedTimers(timers);
-    });
-    return () => {
-      listener.remove();
-    };
-  }
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     getTimers();
+    setLoading(false);
   }, []);
 
   return (
     <View>
-      <FlatList
-        data={state}
-        keyExtractor={(timer) => timer.nameOfTimer}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Show", { nameOfTimer: item.nameOfTimer })
-              }
-            >
-              <TimerListItem>
-                <Name>{item.nameOfTimer}</Name>
-                <DurationWrapper>
-                  <MaterialIcons name="timer" size={24} color="black" />
-                  <Text>
-                    {getMinutesAndSeconds(item.totalDuration).minutes}min{" "}
-                    {getMinutesAndSeconds(item.totalDuration).seconds}secs{" "}
-                  </Text>
-                </DurationWrapper>
-                <TouchableOpacity onPress={() => deleteTimer(item.nameOfTimer)}>
-                  <FontAwesome name="trash-o" size={32} color="black" />
-                </TouchableOpacity>
-              </TimerListItem>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      {isLoading && <Text>Loading...</Text>}
+      {!isLoading && state.length > 0 ? (
+        <FlatList
+          data={state}
+          keyExtractor={(timer) => timer.nameOfTimer}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Show", { nameOfTimer: item.nameOfTimer })
+                }
+              >
+                <TimerListItem>
+                  <Name>{item.nameOfTimer}</Name>
+                  <DurationWrapper>
+                    <MaterialIcons name="timer" size={24} color="black" />
+                    <Text>
+                      {getMinutesAndSeconds(item.totalDuration).minutes}min{" "}
+                      {getMinutesAndSeconds(item.totalDuration).seconds}secs{" "}
+                    </Text>
+                  </DurationWrapper>
+                  <TouchableOpacity
+                    onPress={() => deleteTimer(item.nameOfTimer)}
+                  >
+                    <FontAwesome name="trash-o" size={32} color="black" />
+                  </TouchableOpacity>
+                </TimerListItem>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      ) : (
+        <Text>You have not created any timers yet</Text>
+      )}
     </View>
   );
 };
